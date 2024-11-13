@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="10"> <!-- Rafraîchit la page toutes les 10 secondes -->
+    <title>Météo de la Ville</title>
+</head>
+<body>
+    <h1>Vérifiez la météo</h1>
+    <form method="POST" action="/">
+        <label for="city">Nom de la ville :</label>
+        <input type="text" id="city" name="city" required>
+        <button type="submit">Obtenir la météo</button>
+    </form>
+
+    {% if weather_info %}
+        {% if weather_info.error %}
+            <p>{{ weather_info.error }}</p>
+        {% else %}
+            <h2>Météo pour {{ weather_info.city }}</h2>
+            <p>Prévision de précipitations aujourd'hui : {{ weather_info.precipitation_today }} mm</p>
+            <p>Prévision maximale des précipitations : {{ weather_info.max_precipitation }} mm</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

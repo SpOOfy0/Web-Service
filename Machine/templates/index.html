@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communication avec les robots</title>
+</head>
+<body>
+    <h1>Envoyer un message à un robot</h1>
+
+    <form id="message-form">
+        <label for="robot_id">Robot ID :</label>
+        <input type="text" id="robot_id" name="robot_id" required>
+        <label for="message">Message :</label>
+        <input type="text" id="message" name="message" required>
+        <button type="submit">Envoyer</button>
+    </form>
+
+    <h2>Réponses du serveur</h2>
+    <ul id="response-list"></ul>
+
+    <!-- Inclure la bibliothèque Socket.IO -->
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        const socket = io();  // Se connecter au serveur Socket.IO
+
+        // Soumettre un message au serveur Flask
+        const form = document.getElementById('message-form');
+        const responseList = document.getElementById('response-list');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const robotId = document.getElementById('robot_id').value;
+            const message = document.getElementById('message').value;
+            
+            // Envoyer le message via HTTP GET
+            fetch(`/send_message?robot_id=${robotId}&message=${message}`)
+                .then(response => response.text())
+                .then(data => {
+                    const li = document.createElement('li');
+                    li.textContent = data;
+                    responseList.appendChild(li);
+                })
+                .catch(error => {
+                    const li = document.createElement('li');
+                    li.textContent = "Erreur : " + error;
+                    responseList.appendChild(li);
+                });
+        });
+
+        // Connexion d'un robot fictif
+        const robotId = prompt("Entrez l'ID du robot:");
+        socket.emit('connect_robot', { robot_id: robotId });
+
+        // Recevoir un message du serveur
+        socket.on('server_to_robot', function(data) {
+            alert(`Message du serveur: ${data.message}`);
+            
+            // Envoyer une réponse au serveur
+            socket.emit('robot_response', { robot_id: robotId, message: "Oui, je reçois votre message" });
+        });
+    </script>
+</body>
+</html>

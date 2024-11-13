@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Exécution de Code</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Exécuteur de Code en Ligne</h1>
+        <textarea id="code" placeholder="Entrez votre code ici..."></textarea><br>
+        <select id="language">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+        </select><br>
+        <button onclick="submitCode()">Exécuter</button>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        const socket = io();
+
+        function submitCode() {
+            const code = document.getElementById('code').value;
+            const language = document.getElementById('language').value;
+            socket.emit('submit_code', { code, language });
+        }
+
+        socket.on('code_output', function(data) {
+            document.getElementById('output').innerText = data.output;
+        });
+    </script>
+</body>
+</html>
