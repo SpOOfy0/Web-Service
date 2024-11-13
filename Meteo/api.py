@@ -6,7 +6,7 @@ from contextlib import closing
 
 app = Flask(__name__)
 
-API_KEY = '9f3b38b6c9d172d064ea2ac1187530a88e9e5be836f2f4936b3b1f0b43392ae6'
+API_KEY = 'SECRET_KEY'
 
 def get_city_insee(city_name):
     """Fetch the INSEE code of the city from the API."""
